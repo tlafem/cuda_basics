@@ -52,8 +52,8 @@ int add_dVectors(dVector a, dVector b, dVector c) {
 
 
 	int gridSize = (int)ceil((float)a.len / BLOCKSIZE);
-
-	add_dVector_kernel<<<gridSize, blockSize>>>(device_a, device_b, device_c, a.len);
+	fprintf(stdout, "gridSize=%d, blockSize=%d\n", gridSize, BLOCKSIZE);
+	add_dVector_kernel<<<gridSize, BLOCKSIZE>>>(device_a, device_b, device_c, a.len);
 	cudaStatus = cudaGetLastError();
 	if (cudaStatus != cudaSuccess) {
 		fprintf(stderr, "add_dVector_kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
@@ -87,14 +87,17 @@ void test_add(int n) {
 	dvector_init(c, n);
 
 	for (int i = 0; i < n; ++i) {
-		a.data[i] = .5;
-		b.data[i] = .5;
+		a.data[i] = .75;
+		b.data[i] = .25;
 	}
+
+	add_dVectors(a, b, c);
 
 	// every element should be 1
 	int errors = 0;
 	for (int i = 0; i < n; ++i) {
-		if (abs(1 - c[i]) > 1e-14) {
+		fprintf(stdout, "c[%d]=%f\n", i, c.data[i]);
+		if (abs(1 - c.data[i]) > 1e-14) {
 			++errors;
 		}
 	}
