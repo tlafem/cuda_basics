@@ -16,7 +16,6 @@ __global__ void dotProduct_dVector_kernel(double *a, double *b, double *partial_
 	}
 
 	partial_sums[partial_index] = local_sum;
-	//printf("local_sum=%f\n", local_sum);
 
 	__syncthreads();
 
@@ -35,7 +34,6 @@ __global__ void dotProduct_dVector_kernel(double *a, double *b, double *partial_
 	if (partial_index == 0) {
 		// if we are the thread processing index 0 of partial_sums for our block
 		partial_sum[blockIdx.x] = partial_sums[0];
-		printf("partial_sum[%d]=%f\n", blockIdx.x, partial_sum[blockIdx.x]);
 	}
 	// at this point there is still some partial somes left to compute
 	// inefficient to do so on GPU. Let CPU do this
@@ -54,7 +52,6 @@ int dotProduct_dVectors(dVector a, dVector b, double *result) {
 	cudaError_t cudaStatus;
 
 	int gridSize = (int)ceil((float)a.len / BLOCKSIZE);
-	fprintf(stdout, "gridSize=%d, blockSize=%d\n", gridSize, BLOCKSIZE);
 
 	host_partial = (double *)calloc(gridSize, sizeof(double));
 
@@ -107,9 +104,6 @@ int dotProduct_dVectors(dVector a, dVector b, double *result) {
 		goto Error;
 	}
 
-	for (int i = 0; i < gridSize; ++i)
-		fprintf(stdout, "host_partial[%d]=%f\n", i, host_partial[i]);
-
 Error:
 	cudaFree(device_a);
 	cudaFree(device_b);
@@ -121,7 +115,6 @@ Error:
 
 	double sum = 0;
 	for (int i = 0; i < gridSize; ++i) {
-		fprintf(stdout, "partial[%f]=%f\n", i, host_partial[i]);
 		sum += host_partial[i];
 	}
 
