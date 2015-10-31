@@ -88,7 +88,7 @@ int dotProduct_dVectors(dVector a, dVector b, double *result) {
 	dotProduct_dVector_kernel<<<gridSize, BLOCKSIZE >>>(device_a, device_b, device_partial, a.len);
 	cudaStatus = cudaGetLastError();
 	if (cudaStatus != cudaSuccess) {
-		fprintf(stderr, "add_dVector_kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
+		fprintf(stderr, "dotProduct_dVector_kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
 		goto Error;
 	}
 
