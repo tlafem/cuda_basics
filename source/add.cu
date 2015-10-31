@@ -96,7 +96,7 @@ void test_add(int n) {
 	// every element should be 1
 	int errors = 0;
 	for (int i = 0; i < n; ++i) {
-		fprintf(stdout, "c[%d]=%f\n", i, c.data[i]);
+//		fprintf(stdout, "c[%d]=%f\n", i, c.data[i]);
 		if (abs(1 - c.data[i]) > 1e-14) {
 			++errors;
 		}
